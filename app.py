@@ -1,4 +1,3 @@
-
 # Import necessary libraries
 import streamlit as st
 import pandas as pd
@@ -23,33 +22,33 @@ def main():
     )
     
     # Add a title and description
-    st.title("Diabetes Risk Prediction Dashboard")
+    st.title("🩺 Diabetes Risk Prediction Dashboard")
     st.markdown("""
     This application predicts the risk of diabetes based on various health metrics.
     Use the sidebar to navigate through different sections of the application.
     """)
     
     # Create sidebar for navigation
-    st.sidebar.title("Navigation")
+    st.sidebar.title("🧭 Navigation")
     page = st.sidebar.radio(
         "Select a page:",
-        ["Home", "Make Prediction", "Model Information", "Dataset Exploration"]
+        ["🏠 Home", "🔍 Make Prediction", "📊 Model Information", "📈 Dataset Exploration"]
     )
     
     # Display the selected page
-    if page == "Home":
+    if page == "🏠 Home":
         home_page()
-    elif page == "Make Prediction":
+    elif page == "🔍 Make Prediction":
         prediction_page()
-    elif page == "Model Information":
+    elif page == "📊 Model Information":
         model_info_page()
-    elif page == "Dataset Exploration":
+    elif page == "📈 Dataset Exploration":
         data_exploration_page()
 
 # STEP 2: CREATE THE HOME PAGE
 # ============================
 def home_page():
-    st.header("Welcome to the Diabetes Prediction Dashboard")
+    st.header("🏠 Welcome to the Diabetes Prediction Dashboard")
     
     st.write("""
     ### About This Application
@@ -64,26 +63,26 @@ def home_page():
     2. Explore the **Dataset Exploration** page to understand the relationships between different health factors
     3. Check the **Model Information** page to learn about the machine learning model powering this application
     
-    ### Important Disclaimer
+    ### Important Disclaimer ⚠️
     
     This tool is for informational purposes only and should not replace professional medical advice. 
     Always consult with a healthcare provider for proper diagnosis and treatment.
     """)
     
     # Display some key statistics or visual elements
-    st.subheader("Diabetes Risk Factors")
+    st.subheader("📋 Diabetes Risk Factors")
     
     # Create three columns for key information
     col1, col2, col3 = st.columns(3)
     
     with col1:
-        st.info("**BMI**\n\nHigher BMI values are associated with increased diabetes risk")
+        st.info("**⚖️ BMI**\n\nHigher BMI values are associated with increased diabetes risk")
     
     with col2:
-        st.info("**Age**\n\nDiabetes risk typically increases with age")
+        st.info("**👵 Age**\n\nDiabetes risk typically increases with age")
     
     with col3:
-        st.info("**Family History**\n\nGenetic factors play a significant role in diabetes risk")
+        st.info("**👪 Family History**\n\nGenetic factors play a significant role in diabetes risk")
     
     # Add a visual element
     st.image("https://via.placeholder.com/800x400?text=Diabetes+Risk+Factors+Visualization", 
@@ -149,10 +148,10 @@ def load_or_train_model(data):
         # Try to load pre-trained model
         with open(model_path, 'rb') as file:
             model = pickle.load(file)
-        st.success("Loaded pre-trained model successfully!")
+        st.success("✅ Loaded pre-trained model successfully!")
     except FileNotFoundError:
         # If model doesn't exist, train a new one
-        st.info("Training new model...")
+        st.info("⏳ Training new model...")
         
         # Prepare data
         X = data.drop('Diabetes_State', axis=1)
@@ -170,14 +169,14 @@ def load_or_train_model(data):
         # Evaluate model
         y_pred = model.predict(X_test)
         accuracy = accuracy_score(y_test, y_pred)
-        st.success(f"Model trained successfully with accuracy: {accuracy:.2f}")
+        st.success(f"✅ Model trained successfully with accuracy: {accuracy:.2f}")
     
     return model
 
 # STEP 4: CREATE THE PREDICTION PAGE
 # =================================
 def prediction_page():
-    st.header("Diabetes Risk Prediction")
+    st.header("🔍 Diabetes Risk Prediction")
     st.write("Enter your health metrics below to get a prediction of your diabetes risk.")
     
     data = load_data()  # Load data for feature statistics if needed
@@ -185,102 +184,110 @@ def prediction_page():
     
     # Create a form for user inputs
     with st.form("prediction_form"):
-        # Create columns for more compact layout
-        col1, col2, col3 = st.columns(3)
+        # Create two columns - one for range inputs and one for yes/no inputs
+        range_col, binary_col = st.columns([1, 1])
         
-        with col1:
-            hb = st.number_input("Hemoglobin (HB)", 
-                                min_value=3.0, max_value=20.0, 
-                                value=7.0, step=0.1,
-                                help="Normal range is typically 4.5 to 9.5")
+        with range_col:
+            st.subheader("📏 Range Values")
             
-            cholesterol = st.number_input("Cholesterol", 
-                                        min_value=50, max_value=500, 
-                                        value=180, step=5,
-                                        help="Measured in mg/dL. Normal range is below 200")
+            # Keep these as range inputs as specified
+            bmi = st.slider("⚖️ BMI (Body Mass Index)", 
+                          min_value=10.0, max_value=50.0, 
+                          value=24.5, step=0.5,
+                          help="Normal range is 18.5 to 24.9")
             
-            bmi = st.number_input("BMI (Body Mass Index)", 
-                                min_value=10.0, max_value=50.0, 
-                                value=24.5, step=0.5,
-                                help="Normal range is 18.5 to 24.9")
-            
-            heart_disease = st.selectbox("Heart Disease", 
-                                        options=[0, 1],
-                                        format_func=lambda x: "No" if x == 0 else "Yes",
-                                        help="Do you have a history of heart disease?")
-            
-            phys_activity = st.selectbox("Physical Activity", 
-                                        options=[0, 1],
-                                        format_func=lambda x: "No" if x == 0 else "Yes",
-                                        help="Do you engage in regular physical activity?")
-            
-            phys_hlth = st.slider("Physical Health Issues (days/month)", 
-                                min_value=0, max_value=30, 
-                                value=0, step=1,
-                                help="Number of days in the past month with physical health issues")
-        
-        with col2:
-            gender = st.selectbox("Gender", 
-                                options=[0, 1],
-                                format_func=lambda x: "Female" if x == 0 else "Male")
-            
-            age = st.slider("Age", 
+            age = st.slider("👵 Age (Years)", 
                           min_value=18, max_value=100, 
                           value=45, step=1)
             
-            stroke = st.selectbox("History of Stroke", 
-                                options=[0, 1],
-                                format_func=lambda x: "No" if x == 0 else "Yes")
+            phys_hlth = st.slider("🤒 Physical Health Issues (days/month)", 
+                                min_value=0, max_value=30, 
+                                value=0, step=1,
+                                help="Number of days in the past month with physical health issues")
             
-            gen_hlth = st.slider("General Health", 
-                               min_value=1, max_value=5, 
-                               value=2, step=1,
-                               help="1=Excellent, 5=Poor")
-            
-            chol_check = st.selectbox("Cholesterol Check in Past 5 Years", 
-                                    options=[0, 1],
-                                    format_func=lambda x: "No" if x == 0 else "Yes")
-            
-            smoker = st.selectbox("Smoker", 
-                                options=[0, 1],
-                                format_func=lambda x: "No" if x == 0 else "Yes")
-        
-        with col3:
-            fruits = st.selectbox("Regular Fruit Consumption", 
-                                options=[0, 1],
-                                format_func=lambda x: "No" if x == 0 else "Yes",
-                                help="Do you eat fruit at least once a day?")
-            
-            veggies = st.selectbox("Regular Vegetable Consumption", 
-                                 options=[0, 1],
-                                 format_func=lambda x: "No" if x == 0 else "Yes",
-                                 help="Do you eat vegetables at least once a day?")
-            
-            alcohol = st.selectbox("Heavy Alcohol Consumption", 
-                                 options=[0, 1],
-                                 format_func=lambda x: "No" if x == 0 else "Yes",
-                                 help="Do you consume alcohol heavily?")
-            
-            ment_hlth = st.slider("Mental Health Issues (days/month)", 
+            ment_hlth = st.slider("😔 Mental Health Issues (days/month)", 
                                 min_value=0, max_value=30, 
                                 value=0, step=1,
                                 help="Number of days in the past month with mental health issues")
+        
+        with binary_col:
+            st.subheader("✓ Yes/No Options")
             
-            diff_walk = st.selectbox("Difficulty Walking", 
-                                   options=[0, 1],
-                                   format_func=lambda x: "No" if x == 0 else "Yes",
+            # Convert all other inputs to yes/no (binary) options
+            hb_high = st.selectbox("🩸 High Hemoglobin", 
+                                 options=["No", "Yes"],
+                                 help="Select Yes if your hemoglobin level is above normal")
+            
+            chol_high = st.selectbox("🧬 High Cholesterol", 
+                                    options=["No", "Yes"],
+                                    help="Select Yes if your cholesterol level is above 200 mg/dL")
+            
+            heart_disease = st.selectbox("❤️ Heart Disease", 
+                                       options=["No", "Yes"],
+                                       help="Do you have a history of heart disease?")
+            
+            phys_activity = st.selectbox("🏃‍♀️ Regular Physical Activity", 
+                                       options=["No", "Yes"],
+                                       help="Do you engage in regular physical activity?")
+            
+            gender = st.selectbox("👤 Gender", 
+                                options=["Female", "Male"])
+            
+            stroke = st.selectbox("🧠 History of Stroke", 
+                                options=["No", "Yes"])
+            
+            gen_hlth_poor = st.selectbox("🏥 Poor General Health", 
+                                        options=["No", "Yes"],
+                                        help="Is your general health poor or fair?")
+            
+            chol_check = st.selectbox("🔬 Cholesterol Check in Past 5 Years", 
+                                    options=["No", "Yes"])
+            
+            smoker = st.selectbox("🚬 Smoker", 
+                                options=["No", "Yes"])
+            
+            fruits = st.selectbox("🍎 Regular Fruit Consumption", 
+                                options=["No", "Yes"],
+                                help="Do you eat fruit at least once a day?")
+            
+            veggies = st.selectbox("🥦 Regular Vegetable Consumption", 
+                                 options=["No", "Yes"],
+                                 help="Do you eat vegetables at least once a day?")
+            
+            alcohol = st.selectbox("🍺 Heavy Alcohol Consumption", 
+                                 options=["No", "Yes"],
+                                 help="Do you consume alcohol heavily?")
+            
+            diff_walk = st.selectbox("🚶 Difficulty Walking", 
+                                   options=["No", "Yes"],
                                    help="Do you have serious difficulty walking or climbing stairs?")
         
         # Submit button
-        submit_button = st.form_submit_button("Predict Diabetes Risk")
+        submit_button = st.form_submit_button("🔎 Predict Diabetes Risk")
     
     # Process the form submission
     if submit_button:
+        # Convert yes/no to binary
+        # Convert yes/no values to binary (0/1)
+        hb = 1 if hb_high == "Yes" else 0
+        cholesterol = 1 if chol_high == "Yes" else 0
+        heart_disease_val = 1 if heart_disease == "Yes" else 0
+        phys_activity_val = 1 if phys_activity == "Yes" else 0
+        gender_val = 1 if gender == "Male" else 0
+        stroke_val = 1 if stroke == "Yes" else 0
+        gen_hlth = 4 if gen_hlth_poor == "Yes" else 2  # Approximate mapping: Yes=Poor(4), No=Good(2)
+        chol_check_val = 1 if chol_check == "Yes" else 0
+        smoker_val = 1 if smoker == "Yes" else 0
+        fruits_val = 1 if fruits == "Yes" else 0
+        veggies_val = 1 if veggies == "Yes" else 0
+        alcohol_val = 1 if alcohol == "Yes" else 0
+        diff_walk_val = 1 if diff_walk == "Yes" else 0
+        
         # Collect all features
         features = np.array([
-            hb, cholesterol, bmi, heart_disease, phys_activity, phys_hlth,
-            gender, age, stroke, gen_hlth, chol_check, smoker,
-            fruits, veggies, alcohol, ment_hlth, diff_walk
+            hb, cholesterol, bmi, heart_disease_val, phys_activity_val, phys_hlth,
+            gender_val, age, stroke_val, gen_hlth, chol_check_val, smoker_val,
+            fruits_val, veggies_val, alcohol_val, ment_hlth, diff_walk_val
         ]).reshape(1, -1)
         
         # Make prediction
@@ -288,7 +295,7 @@ def prediction_page():
         probability = model.predict_proba(features)[0][1]
         
         # Display prediction result
-        st.subheader("Prediction Result")
+        st.subheader("🔮 Prediction Result")
         
         # Create columns for result and visualization
         result_col, viz_col = st.columns([1, 1])
@@ -299,19 +306,19 @@ def prediction_page():
                 st.write(f"Probability: {probability:.2%}")
                 st.write("""
                 **Recommendations:**
-                - Consider consulting with a healthcare provider
-                - Monitor your blood glucose levels regularly
-                - Maintain a healthy diet and exercise routine
-                - Review your lifestyle factors shown in the risk assessment
+                - 👨‍⚕️ Consider consulting with a healthcare provider
+                - 📊 Monitor your blood glucose levels regularly
+                - 🥗 Maintain a healthy diet and exercise routine
+                - 📝 Review your lifestyle factors shown in the risk assessment
                 """)
             else:
                 st.success("✅ **Low Risk of Diabetes Detected**")
                 st.write(f"Probability: {probability:.2%}")
                 st.write("""
                 **Recommendations:**
-                - Continue maintaining your healthy lifestyle
-                - Regular check-ups are still recommended
-                - Stay active and maintain a balanced diet
+                - 👍 Continue maintaining your healthy lifestyle
+                - 🏥 Regular check-ups are still recommended
+                - 🏃‍♂️ Stay active and maintain a balanced diet
                 """)
         
         with viz_col:
@@ -347,11 +354,11 @@ def prediction_page():
             st.pyplot(fig)
         
         # Feature importance section
-        st.subheader("Key Factors Influencing Your Risk")
+        st.subheader("🔑 Key Factors Influencing Your Risk")
         
         # Get feature importances from the model
         feature_names = [
-            "HB", "Cholesterol", "BMI", "Heart Disease", "Physical Activity", 
+            "Hemoglobin", "Cholesterol", "BMI", "Heart Disease", "Physical Activity", 
             "Physical Health", "Gender", "Age", "Stroke", "General Health", 
             "Cholesterol Check", "Smoker", "Fruits", "Vegetables", 
             "Alcohol Consumption", "Mental Health", "Difficulty Walking"
@@ -373,29 +380,29 @@ def prediction_page():
         st.pyplot(fig)
         
         # Add user-specific insights based on their inputs
-        st.subheader("Personalized Insights")
+        st.subheader("💡 Personalized Insights")
         
         insights = []
         
         if bmi > 30:
-            insights.append("Your BMI is in the obese range, which significantly increases diabetes risk.")
+            insights.append("🚨 Your BMI is in the obese range, which significantly increases diabetes risk.")
         elif bmi > 25:
-            insights.append("Your BMI is in the overweight range, which can increase diabetes risk.")
+            insights.append("⚠️ Your BMI is in the overweight range, which can increase diabetes risk.")
         
         if age > 45:
-            insights.append("Being over 45 is a risk factor for Type 2 diabetes.")
+            insights.append("⏳ Being over 45 is a risk factor for Type 2 diabetes.")
         
-        if heart_disease == 1:
-            insights.append("Having heart disease increases your risk for diabetes.")
+        if heart_disease == "Yes":
+            insights.append("❤️ Having heart disease increases your risk for diabetes.")
         
-        if phys_activity == 0:
-            insights.append("Lack of physical activity is associated with higher diabetes risk.")
+        if phys_activity == "No":
+            insights.append("🏃‍♀️ Lack of physical activity is associated with higher diabetes risk.")
         
-        if smoker == 1:
-            insights.append("Smoking can increase insulin resistance and diabetes risk.")
+        if smoker == "Yes":
+            insights.append("🚬 Smoking can increase insulin resistance and diabetes risk.")
         
-        if fruits == 0 and veggies == 0:
-            insights.append("Regular consumption of fruits and vegetables is associated with lower diabetes risk.")
+        if fruits == "No" and veggies == "No":
+            insights.append("🥦 Regular consumption of fruits and vegetables is associated with lower diabetes risk.")
         
         # Display insights
         if insights:
@@ -407,38 +414,38 @@ def prediction_page():
 # STEP 5: CREATE THE MODEL INFORMATION PAGE
 # =======================================
 def model_info_page():
-    st.header("Model Information")
+    st.header("📊 Model Information")
     
     st.write("""
-    ### Random Forest Classifier
+    ### 🌲 Random Forest Classifier
     
     This application uses a **Random Forest Classifier** to predict diabetes risk. Random Forests are a popular
     machine learning algorithm that create multiple decision trees and merge their predictions to achieve
     higher accuracy and prevent overfitting.
     
-    ### Model Features
+    ### 📋 Model Features
     
     The model uses the following features to make predictions:
     
-    | Feature | Description |
-    | ------- | ----------- |
-    | HB | Hemoglobin level |
-    | Cholesterol | Blood cholesterol level |
-    | BMI | Body Mass Index |
-    | Heart_Disease | Presence of heart disease (0=No, 1=Yes) |
-    | PhysActivity | Regular physical activity (0=No, 1=Yes) |
-    | PhysHlth | Days with physical health issues in past month |
-    | Gender | Gender (0=Female, 1=Male) |
-    | Age | Age in years |
-    | Stroke | History of stroke (0=No, 1=Yes) |
-    | GenHlth | General health rating (1=Excellent, 5=Poor) |
-    | CholCheck | Cholesterol check in past 5 years (0=No, 1=Yes) |
-    | Smoker | Smoking status (0=No, 1=Yes) |
-    | Fruits | Regular fruit consumption (0=No, 1=Yes) |
-    | Veggies | Regular vegetable consumption (0=No, 1=Yes) |
-    | HvyAlcoholConsump | Heavy alcohol consumption (0=No, 1=Yes) |
-    | MentHlth | Days with mental health issues in past month |
-    | DiffWalk | Difficulty walking (0=No, 1=Yes) |
+    | Feature | Description | Icon |
+    | ------- | ----------- | ---- |
+    | HB | Hemoglobin level | 🩸 |
+    | Cholesterol | Blood cholesterol level | 🧬 |
+    | BMI | Body Mass Index | ⚖️ |
+    | Heart_Disease | Presence of heart disease | ❤️ |
+    | PhysActivity | Regular physical activity | 🏃‍♀️ |
+    | PhysHlth | Days with physical health issues | 🤒 |
+    | Gender | Gender | 👤 |
+    | Age | Age in years | 👵 |
+    | Stroke | History of stroke | 🧠 |
+    | GenHlth | General health rating | 🏥 |
+    | CholCheck | Cholesterol check in past 5 years | 🔬 |
+    | Smoker | Smoking status | 🚬 |
+    | Fruits | Regular fruit consumption | 🍎 |
+    | Veggies | Regular vegetable consumption | 🥦 |
+    | HvyAlcoholConsump | Heavy alcohol consumption | 🍺 |
+    | MentHlth | Days with mental health issues | 😔 |
+    | DiffWalk | Difficulty walking | 🚶 |
     """)
     
     # Load model to display performance metrics
@@ -446,7 +453,7 @@ def model_info_page():
     model = load_or_train_model(data)
     
     # Display model performance metrics
-    st.subheader("Model Performance")
+    st.subheader("📈 Model Performance")
     
     # Create sample test data for demonstration
     X = data.drop('Diabetes_State', axis=1)
@@ -480,10 +487,10 @@ def model_info_page():
         
         # Accuracy score
         accuracy = accuracy_score(y_test, y_pred)
-        st.metric("Model Accuracy", f"{accuracy:.2%}")
+        st.metric("Model Accuracy", f"{accuracy:.2%}", delta=None, delta_color="normal")
     
     # Feature importance
-    st.subheader("Feature Importance")
+    st.subheader("🔍 Feature Importance")
     
     # Get feature names and importances
     feature_names = X.columns
@@ -504,22 +511,22 @@ def model_info_page():
 # STEP 6: CREATE THE DATA EXPLORATION PAGE
 # ======================================
 def data_exploration_page():
-    st.header("Dataset Exploration")
+    st.header("📈 Dataset Exploration")
     
     # Load data
     data = load_data()
     
     # Show dataset overview
-    st.subheader("Dataset Overview")
+    st.subheader("📋 Dataset Overview")
     st.write(f"Dataset Shape: {data.shape}")
     st.dataframe(data.head())
     
     # Summary statistics
-    st.subheader("Summary Statistics")
+    st.subheader("📊 Summary Statistics")
     st.dataframe(data.describe())
     
     # Distribution of target variable
-    st.subheader("Distribution of Diabetes Status")
+    st.subheader("🍩 Distribution of Diabetes Status")
     
     fig, ax = plt.subplots(figsize=(8, 6))
     diabetes_counts = data['Diabetes_State'].value_counts()
@@ -529,7 +536,7 @@ def data_exploration_page():
     st.pyplot(fig)
     
     # Correlation analysis
-    st.subheader("Correlation Analysis")
+    st.subheader("🔗 Correlation Analysis")
     
     # Compute correlation matrix
     corr_matrix = data.corr()
@@ -541,7 +548,7 @@ def data_exploration_page():
     st.pyplot(fig)
     
     # Feature relationship analysis
-    st.subheader("Feature Relationships")
+    st.subheader("🔄 Feature Relationships")
     
     # Let user select features to explore
     feature_options = data.columns.tolist()
@@ -563,7 +570,7 @@ def data_exploration_page():
     st.pyplot(fig)
     
     # Show histograms for selected features
-    st.subheader("Feature Distributions by Diabetes Status")
+    st.subheader("📊 Feature Distributions by Diabetes Status")
     
     selected_feature = st.selectbox("Select Feature to Analyze", feature_options)
     
@@ -574,7 +581,7 @@ def data_exploration_page():
     st.pyplot(fig)
     
     # Age group analysis
-    st.subheader("Diabetes Prevalence by Age Group")
+    st.subheader("👵 Diabetes Prevalence by Age Group")
     
     # Create age groups
     data['AgeGroup'] = pd.cut(data['Age'], bins=[0, 30, 45, 60, 75, 100], 
@@ -593,7 +600,7 @@ def data_exploration_page():
     st.pyplot(fig)
     
     # BMI category analysis
-    st.subheader("Diabetes Prevalence by BMI Category")
+    st.subheader("⚖️ Diabetes Prevalence by BMI Category")
     
     # Create BMI categories
     data['BMI_Category'] = pd.cut(data['BMI'], 
