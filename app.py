@@ -99,7 +99,9 @@ def load_data():
     # For demonstration purposes, creating a sample dataset that matches your schema
     try:
         # Try to load data from a CSV file if it exists
-        data = pd.read_csv('diabetes_data.csv')
+        file_id = '1ABmyLBWHtOzV9OnJYLXzfVGVnJtYxnlr'
+        url = f'https://drive.google.com/uc?id={file_id}'
+        data = pd.read_csv(url)
     except FileNotFoundError:
         # If file doesn't exist, create sample data
         st.warning("Sample data is being used. Replace with your actual dataset.")
