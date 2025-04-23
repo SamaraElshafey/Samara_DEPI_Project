@@ -1,45 +1,15 @@
-# ---------------------------------------------
-# CORE APP FRAMEWORK
-# ---------------------------------------------
-streamlit==1.33.0              # Web app UI framework
-
-# ---------------------------------------------
-# DATA PROCESSING & ANALYSIS
-# ---------------------------------------------
-pandas==2.2.1                  # Data manipulation
-numpy==1.26.4                  # Numerical operations
-
-# ---------------------------------------------
-# MACHINE LEARNING MODELS
-# ---------------------------------------------
-scikit-learn==1.6.1            # All classic ML models (Linear, Logistic, RF, SVM, KNN, MLP, etc.)
-xgboost>=2.0.3                 # XGBClassifier and XGBRegressor
-joblib==1.4.0                  # Model serialization
-
-# ---------------------------------------------
-# CHARTING & VISUALIZATION
-# ---------------------------------------------
-plotly==5.20.0                 # Interactive charts
-matplotlib==3.8.4              # Static visualizations
-scipy==1.13.0                  # Scientific computing (KDE, stats)
-seaborn==0.13.2              # Optional: attractive statistical plots
-
-# ---------------------------------------------
-# FILE & NETWORK UTILITIES
-# ---------------------------------------------
-gdown==5.1.0                   # Google Drive downloads
-requests==2.31.0               # For APIs or remote file access
-urllib3>=1.26.0                # Network reliability
-
-# ---------------------------------------------
-# STREAMLIT DEPLOYMENT SUPPORT
-# ---------------------------------------------
-pyyaml==6.0.1                  # Config files
-watchdog==4.0.0                # File change monitoring (hot-reload)
-protobuf<5                     # Required by Streamlit
-pyarrow>=14.0.0                # Optional: Parquet or Arrow data support
-
-# ---------------------------------------------
-# OPTIONAL DEPENDENCIES
-tensorflow==2.16.1           # Uncomment if adding DL models
-# seaborn==0.13.2              # Uncomment if you use advanced styled plots
+# requirements.txt
+numpy==1.23.5
+pandas==2.0.1
+scikit-learn==1.2.2
+fastapi==0.95.2
+uvicorn==0.22.0
+gunicorn==20.1.0
+flask==2.3.2
+streamlit==1.22.0
+matplotlib==3.7.1
+seaborn==0.12.2
+requests==2.30.0
+pydantic==1.10.8
+python-multipart==0.0.6
+joblib==1.2.0
